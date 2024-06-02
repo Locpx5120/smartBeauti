@@ -1,0 +1,76 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 18px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+.navbar-brand {
+    margin-left: 4%;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    width: 10%;
+}
+.navbar-logo {
+    height: auto; /* Adjust the max height as needed */
+    width: 100%; /* Allows the image to resize proportionally */
+    object-fit: contain; /* This property ensures the image fits within the container without distorting */
+}
+
+.header {
+    background: #242526;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    min-height: 80px;
+    padding: 0px;
+    box-shadow: #808080 0px 10px inset;
+    z-index: 1000;
+}
+
+main {
+    min-height: fit-content;
+    margin-top: 80px;
+}
+
+footer {
+    height: 60px;
+}
+
+.left_nav {
+    margin-left: 10px;
+}
+
+.left_nav li {
+    margin-right: 20px;
+    font-size: 18px;
+    width: fit-content;
+    height: 45px;
+    justify-content: center;
+}
+
+.left_nav li:hover {
+    background: #3a3b3c;
+    border-radius: 10px;
+}
+
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-right: 0.5em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}

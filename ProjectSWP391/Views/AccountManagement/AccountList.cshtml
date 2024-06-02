@@ -1,0 +1,162 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+@model List<Account>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: center;
+        border-top: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #3d89f8;
+        font-weight: bold;
+        padding: 15px 0 15px 0;
+        border-top: none;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    img {
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .search-container {
+        margin-left: 20px;
+    }
+
+        .search-container input[type="text"] {
+            width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-container button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+    .back-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #e0e0e0;
+        color: #333;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .back-button:hover {
+            background-color: #ccc;
+        }
+</style>
+
+
+<div class="search-container">
+
+    <form method="get" asp-action="AccountList" id="search-form">
+        <a href="/AccountManagement/Create" class="back-button"><i class="fa-solid fa-user-plus fa-xl"></i></a>
+        <input value="@ViewData["key"]" type="text" placeholder="Search by Account name" name="search" id="search-input" maxlength="20">
+        <input type="hidden" name="isSearch" value="true" />
+        <button type="submit">Search</button>
+    </form>
+</div>
+<h3>@ViewBag.ErrorMsg</h3>
+<h3>@ViewBag.SuccessMsg</h3>
+<table>
+
+
+
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Full Name</th>
+            <th>Role</th>
+            <th>Active</th>
+            <th>Image</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 1;
+        }
+        @foreach (var account in Model)
+        {
+            <tr>
+                <td>@i</td>
+                <td><a href="/AccountManagement/Detail?email=@account.Email">@account.Email</a></td>
+                <td>@account.Phone</td>
+                <td>@account.FullName</td>
+                @if (account.Role == 1)
+                {
+                    <td>Admin</td>
+                }
+                else if (account.Role == 2)
+                {
+                    <td>Employee</td>
+                }
+                else
+                {
+                    <td>Customer</td>
+                }
+                @if (account.IsActive == 1)
+                {
+                    <td style="color:limegreen">Yes</td>
+                }
+                else if (account.IsActive == 2)
+                {
+                    <td style="color:red;">Password need to change</td>
+                }
+                else
+                {
+                    <td style="color:red;">No</td>
+                }
+
+                <td><img src="@(account.Image==null?"https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png":account.Image)" alt="Account Image" /></td>
+                <td>
+                    @if (account.Role == 2)
+                    {
+                        <a href="/AccountManagement/Update?id=@account.AccountId" class="back-button">Update</a>
+                    }
+                    else
+                    {
+                        <span class="back-button" style="background-color: rgba(0,0,0,0.4); cursor: no-drop;">Update</span>
+                    }
+                    @if (account.IsActive == 1)
+                    {
+                        <a href="/AccountManagement/Delete?id=@account.AccountId" class="back-button">Deactive</a>
+                    }
+                    else if (account.IsActive == 0)
+                    {
+                        <a href="/AccountManagement/Delete?id=@account.AccountId" class="back-button">Active</a>
+                    }
+
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>

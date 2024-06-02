@@ -1,0 +1,24 @@
+﻿@using ProjectSWP391.Models
+@model Account
+
+<head>
+    <title> Register Page </title>
+    <link rel="stylesheet" type="text/css" href="~/css/Authen.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Register</h1>
+        <form action="/Authentication/Register" method="post">
+            <label class="error-label">@ViewBag.ErrorMsg</label><br />
+            <label class="success-label">@ViewBag.SuccessMsg</label><br />
+            <input type="text" id="email" placeholder="Account" asp-for="Email" required>
+            <input type="password" id="password" placeholder="Password" asp-for="Password" maxlength="20" required>
+            <input type="password" id="rePassword" placeholder="Re-enter Password" name="rePassword" maxlength="20" required>
+            <button type="submit">Register</button>
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a href="/Authentication/Login">Login</a></p>
+        </div>
+    </div>
+</body>
+

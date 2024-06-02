@@ -1,0 +1,31 @@
+﻿
+@using ProjectSWP391.Models
+@model Account
+
+<head>
+<title> Login </title>
+    <link rel="stylesheet" type="text/css" href="~/css/Authen.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form action="/Authentication/Login" method="post">
+            <label class="error-label">@ViewBag.ErrorMsg</label><br />
+            <input type="text" id="email" placeholder="Account" asp-for="Email" required>
+            <input type="password" id="password" placeholder="Password" asp-for="Password" required>
+            <div class="remember-forgot">
+                <label for="remember">Remember me</label><br />
+                <a href="/Authentication/ForgetPassword">Forgot password?</a><br />
+                <a href="/Authentication/ResetPassword">Reset password</a><br />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="register-link">
+            <p>Don't have an account? <a href="/Authentication/Register">Register</a></p>
+        </div>
+    </div>
+</body>
+
+    
+
+<!-- #region Style -->

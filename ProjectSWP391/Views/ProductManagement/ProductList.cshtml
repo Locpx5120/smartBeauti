@@ -1,0 +1,252 @@
+﻿@model List<ProjectSWP391.DTOs.ProductDTO>
+
+@{
+    ViewData["Title"] = "DashBoard";
+    Layout = "_AdminLayout";
+}
+<link rel="stylesheet" href="/Product/fonts/icomoon/style.css">
+
+<link rel="stylesheet" href="/Product/css/owl.carousel.min.css">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/Product/css/bootstrap.min.css">
+
+<!-- Style -->
+@*<link rel="stylesheet" href="/Product/css/style.css">*@
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: center;
+        border-top: 1px solid #ddd;
+
+    }
+
+    th {
+        background-color: #3d89f8;
+        font-weight: bold;
+        padding: 15px 0 15px 0;
+        border-top: none;
+        color: white;
+  
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .description {
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+
+    img {
+        max-width: 100px;
+        max-height: 80px;
+    }
+
+   
+
+    .back-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #e0e0e0;
+        color: #333;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .search-container {
+        margin-left: 20px;
+    }
+
+        .search-container input[type="text"] {
+            width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-container button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #ccc;
+        }
+
+    }
+</style>
+
+<h2 style="text-align:center; margin-top: 30px;">Product Management</h2>
+@*<p style="color: rgba(255,255,255,0.5); font-weight: 300;">
+
+    <a asp-action="CreateProduct" class="btn btn-dark edt-button-submit">Create New</a>
+</p>*@
+
+
+<div class="search-container">
+    
+    <form method="get" asp-action="ProductList" id="search-form">
+        <a href="/ProductManagement/CreateProduct" class="back-button"><i class="fa-solid fa-user-plus fa-xl"></i></a>
+        <input value="@ViewData["key"]" type="text" placeholder="Search by Product Name, Price" name="search" id="search-input" maxlength="20">
+        <input type="hidden" name="isSearch" value="true" />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+
+
+
+
+<table>
+    <thead>
+        <tr>
+
+            <th scope="col">Id</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Category Id</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Active</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.ProductId
+                </td>
+                <td>
+                    <img src="@item.Image" alt="Not Found" />
+                </td>
+                <td>
+                    <a href="/CustomerManagement/ProductDetails?id=@item.ProductId">@item.ProductName</a>
+                </td>
+                <td class="description">
+                    @item.Description
+                </td>
+                <td>
+                    @item.Price
+                </td>
+                <td>
+                    @item.Quantity
+                </td>
+                <td>
+                    @item.PcategoryId
+                </td>
+                <td>
+                    @item.Pcategory.PcategoryName
+                </td>
+                <td>
+                    @if (item.IsActive == true)
+                    {
+                        <i class="fa-solid fa-circle" style="color: #5df20d;"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-circle" style="color: #d63a05;"></i>
+                    }
+                </td>
+                <td>
+                    <a asp-action="EditProduct" asp-route-id="@item.ProductId"><i class="fas fa-edit" style="font-size: 20px; color: black;"></i></a>
+                    @if (item.IsActive == true)
+                    {
+                        <a href="#" type="button" onclick="ConfirmDeactive(@item.ProductId)"><i class="fa-solid fa-toggle-on" style="font-size: 20px; color: black;"></i></a>
+                    }
+                    else
+                    {
+                        <a href="#" type="button" onclick="ConfirmActive(@item.ProductId)"><i class="fa-solid fa-toggle-off" style="font-size: 20px; color: black;"></i></a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Paging -->
+<div class="pagination-container">
+    <nav aria-label="Page navigation" style="box-shadow: none;">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("ProductList", new { page = ViewBag.CurrentPage - 1, search = ViewData["key"], isSearch = false })" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("ProductList", new { page = i, search = ViewData["key"], isSearch = false })">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("ProductList", new { page = ViewBag.CurrentPage + 1, search = ViewData["key"], isSearch = false })" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+<script src="/Product/js/jquery-3.3.1.min.js"></script>
+<script src="/Product/js/popper.min.js"></script>
+<script src="/Product/js/bootstrap.min.js"></script>
+<script src="/Product/js/main.js"></script>
+<script>
+    document.getElementById('search-input').addEventListener('keydown', function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById('search-form').submit();
+        }
+    });
+
+    function ConfirmDeactive(id) {
+        var res = confirm("Are you sure you want to deactive this Product?");
+        if (res == true) {
+            window.location.assign("/ProductManagement/DeactiveProduct?id=" + id);
+        } else {
+            return false;
+        }
+    }
+
+    function ConfirmActive(id) {
+        var res = confirm("Are you sure you want to active this Product?");
+        if (res == true) {
+            window.location.assign("/ProductManagement/DeactiveProduct?id=" + id);
+        } else {
+            return false;
+        }
+    }
+</script>
